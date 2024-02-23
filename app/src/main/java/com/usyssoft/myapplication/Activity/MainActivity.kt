@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.view.SurfaceView
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.usyssoft.myapplication.BaseActivity
+import com.usyssoft.myapplication.Utils.media.RtcTokenBuilder2
 import com.usyssoft.myapplication.databinding.ActivityMainBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
@@ -27,9 +27,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private lateinit var b: ActivityMainBinding
 
 
-    private val AGORA_APP_ID = "AGORA_APP_ID"
+    private val AGORA_APP_ID = ""
     private val AGORA_CHANNEL_NAME = "agoraexample"
-    private val AGORA_TOKEN = "AGORA_Temp token for audio/video call TOKEN"
+    private var AGORA_TOKEN: String? = null
+    private val AGORA_APP_CERTIFICATE = ""
     private val AGORA_UID = 0
 
     private var isJoin = false
@@ -37,7 +38,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var localSurface: SurfaceView? = null
     private var remoteSurface: SurfaceView? = null
 
-    private val PERMISSION_CODE = 987
+
     private val REQ_PERM = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
     private fun checkPermission(): Boolean {
         return !(ContextCompat.checkSelfPermission(
@@ -49,16 +50,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         ) != PackageManager.PERMISSION_GRANTED)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = initializeBinding()
         //b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, REQ_PERM, PERMISSION_CODE)
-        }
-        setupRTCEngine()
+        tokenBuilder()
+
 
         b.apply {
             leaveCall.setOnClickListener {
@@ -69,18 +69,43 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }
 
+        setupRTCEngine()
+
+        permissionResultLiveData.observe(this) { isPermissionGranted ->
+            if (isPermissionGranted) {
+                joinCallFunc()
+            } else {
+                //Error Permission Message
+            }
+        }
+
+
+    }
+
+    private fun tokenBuilder() {
+        val tokenBuilder = RtcTokenBuilder2()
+        val timestamp = (System.currentTimeMillis() / 1000 + 60).toInt()
+        AGORA_TOKEN = tokenBuilder.buildTokenWithUid(
+            AGORA_APP_ID,AGORA_CHANNEL_NAME,
+            AGORA_APP_CERTIFICATE,
+            AGORA_UID,
+            RtcTokenBuilder2.Role.ROLE_PUBLISHER,
+            timestamp,timestamp,
+        )
 
     }
 
     private fun joinCallFunc() {
-        if (checkPermission()) {
+        if (!checkPermission()) {
+            ActivityCompat.requestPermissions(this, REQ_PERM, PERMISSION_CODE_VIDEO_CALL)
+        } else {
             val option = ChannelMediaOptions()
             option.channelProfile = Constants.CHANNEL_PROFILE_COMMUNICATION
             option.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
             setupLocalVideo()
             localSurface!!.visibility = VISIBLE
             agoraEngine!!.startPreview()
-            agoraEngine!!.joinChannel(AGORA_TOKEN,AGORA_CHANNEL_NAME,AGORA_UID,option)
+            agoraEngine!!.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
         }
 
     }
@@ -88,7 +113,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun leaveCallFunc() {
         if (!isJoin) {
             println("Join a channel first")
-        }else {
+        } else {
             agoraEngine!!.leaveChannel()
             println("Yout left the channel")
             if (remoteSurface != null) remoteSurface!!.visibility = GONE
@@ -157,12 +182,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         agoraEngine!!.setupRemoteVideo(VideoCanvas(remoteSurface, VideoCanvas.RENDER_MODE_FIT, uid))
 
     }
+
     private fun setupLocalVideo() {
         localSurface = SurfaceView(baseContext)
         localSurface!!.setZOrderMediaOverlay(true)
         b.localUser.addView(localSurface)
 
-        agoraEngine!!.setupLocalVideo(VideoCanvas(localSurface, VideoCanvas.RENDER_MODE_FIT, AGORA_UID))
+        agoraEngine!!.setupLocalVideo(
+            VideoCanvas(
+                localSurface,
+                VideoCanvas.RENDER_MODE_FIT,
+                AGORA_UID
+            )
+        )
 
     }
 }

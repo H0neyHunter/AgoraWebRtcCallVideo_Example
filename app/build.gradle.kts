@@ -50,6 +50,9 @@ dependencies {
 
     implementation("io.agora.rtc:full-sdk:4.2.6")
 
+
+    implementation("commons-codec:commons-codec:1.11")
+
     //implementation("com.github.AgoraIO-Community:VideoUIKit-Android:Tag")
 
 }
