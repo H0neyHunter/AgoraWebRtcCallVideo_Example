@@ -31,7 +31,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val AGORA_CHANNEL_NAME = "agoraexample"
     private var AGORA_TOKEN: String? = null
     private val AGORA_APP_CERTIFICATE = ""
-    private val AGORA_UID = 0
+    private val AGORA_UID = 1
 
     private var isJoin = false
     private var agoraEngine: RtcEngine? = null
@@ -57,7 +57,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         //b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        tokenBuilder()
+        AGORA_TOKEN = "007eJxTYJidwavV5vBwpelN5rJnL+MXP9//bDdH7JoCwzNrvp92V1yswGBulGRpZmKYlpKYmmySZGBhkZSabGSZlmJgmGqSlmxuWtV6I3UbELe1TfRlZGBkYAFiEJ8JTDKDSRYwycOQmJ5flJhakZhbkJPKwAAAolkwRw=="
+
+        //tokenBuilder()
 
 
         b.apply {
@@ -85,13 +87,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun tokenBuilder() {
         val tokenBuilder = RtcTokenBuilder2()
         val timestamp = (System.currentTimeMillis() / 1000 + 60).toInt()
-        AGORA_TOKEN = tokenBuilder.buildTokenWithUid(
-            AGORA_APP_ID,AGORA_CHANNEL_NAME,
-            AGORA_APP_CERTIFICATE,
-            AGORA_UID,
-            RtcTokenBuilder2.Role.ROLE_PUBLISHER,
-            timestamp,timestamp,
-        )
+        if (AGORA_TOKEN == null) {
+            AGORA_TOKEN = tokenBuilder.buildTokenWithUid(
+                AGORA_APP_ID,
+                AGORA_APP_CERTIFICATE,AGORA_CHANNEL_NAME,
+                AGORA_UID,
+                RtcTokenBuilder2.Role.ROLE_PUBLISHER,
+                timestamp,timestamp,
+            )
+            println("agoraTOken: $AGORA_TOKEN")
+        }
 
     }
 

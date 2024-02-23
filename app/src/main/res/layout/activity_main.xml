@@ -22,9 +22,9 @@
         android:id="@+id/local_user"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="52dp"
         android:background="#454141"
-        app:layout_constraintBottom_toTopOf="@+id/leaveCall"
+        app:layout_constraintBottom_toBottomOf="@+id/remote_user"
         app:layout_constraintEnd_toEndOf="parent">
 
     </FrameLayout>
