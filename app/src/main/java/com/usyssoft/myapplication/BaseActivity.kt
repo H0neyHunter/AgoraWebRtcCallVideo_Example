@@ -3,13 +3,19 @@ package com.usyssoft.myapplication
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.viewbinding.ViewBinding
+import com.usyssoft.myapplication.Utils.media.RtcTokenBuilder2
 
 
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     companion object {
+        const val AGORA_APP_ID = ""
+        const val AGORA_CHANNEL_NAME = "agoraexample"
+        const val AGORA_APP_CERTIFICATE = ""
         const val PERMISSION_CODE_VIDEO_CALL = 987
     }
 
@@ -20,8 +26,25 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState, persistentState)
         binding = initializeBinding()
         setContentView(binding.root)
-    }
+        onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                finish()
+            }
 
+        })
+    }
+    fun tokenBuilder(agora_user_uid:Int) : String {
+        val tokenBuilder = RtcTokenBuilder2()
+        val timestamp = (System.currentTimeMillis() / 1000 + 60).toInt()
+        return tokenBuilder.buildTokenWithUid(
+            AGORA_APP_ID,
+            AGORA_APP_CERTIFICATE,AGORA_CHANNEL_NAME,
+            agora_user_uid,
+            RtcTokenBuilder2.Role.ROLE_PUBLISHER,
+            timestamp,timestamp,
+        )
+
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

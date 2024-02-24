@@ -53,6 +53,9 @@ dependencies {
 
     implementation("commons-codec:commons-codec:1.11")
 
-    //implementation("com.github.AgoraIO-Community:VideoUIKit-Android:Tag")
+
+    //implementation ("com.github.agoraio-community:videouikit-android:final:<version>")
+    //implementation("com.github.AgoraIO-Community:VideoUIKit-Android:4.0.1")
+    implementation("com.github.AgoraIO-Community.VideoUIKit-Android:final:4.0.1")
 
 }

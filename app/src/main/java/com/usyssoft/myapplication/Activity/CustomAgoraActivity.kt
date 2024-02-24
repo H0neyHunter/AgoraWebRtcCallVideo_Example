@@ -1,6 +1,7 @@
 package com.usyssoft.myapplication.Activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.SurfaceView
@@ -10,7 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.usyssoft.myapplication.BaseActivity
 import com.usyssoft.myapplication.Utils.media.RtcTokenBuilder2
-import com.usyssoft.myapplication.databinding.ActivityMainBinding
+import com.usyssoft.myapplication.databinding.ActivityCustomagoraBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
@@ -18,20 +19,17 @@ import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineConfig
 import io.agora.rtc2.video.VideoCanvas
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
 
-    override fun initializeBinding(): ActivityMainBinding {
-        return ActivityMainBinding.inflate(layoutInflater)
+    override fun initializeBinding(): ActivityCustomagoraBinding {
+        return ActivityCustomagoraBinding.inflate(layoutInflater)
     }
 
-    private lateinit var b: ActivityMainBinding
+    private lateinit var b: ActivityCustomagoraBinding
 
 
-    private val AGORA_APP_ID = ""
-    private val AGORA_CHANNEL_NAME = "agoraexample"
     private var AGORA_TOKEN: String? = null
-    private val AGORA_APP_CERTIFICATE = ""
-    private val AGORA_UID = 1
+    private var AGORA_UID = 0
 
     private var isJoin = false
     private var agoraEngine: RtcEngine? = null
@@ -42,10 +40,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val REQ_PERM = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
     private fun checkPermission(): Boolean {
         return !(ContextCompat.checkSelfPermission(
-            this@MainActivity,
+            this@CustomAgoraActivity,
             REQ_PERM[0]
         ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            this@MainActivity,
+            this@CustomAgoraActivity,
             REQ_PERM[1]
         ) != PackageManager.PERMISSION_GRANTED)
     }
@@ -57,9 +55,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         //b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        AGORA_UID = intent.getIntExtra("userId",0)
+
+
         AGORA_TOKEN = "007eJxTYJidwavV5vBwpelN5rJnL+MXP9//bDdH7JoCwzNrvp92V1yswGBulGRpZmKYlpKYmmySZGBhkZSabGSZlmJgmGqSlmxuWtV6I3UbELe1TfRlZGBkYAFiEJ8JTDKDSRYwycOQmJ5flJhakZhbkJPKwAAAolkwRw=="
 
         //tokenBuilder()
+
 
 
         b.apply {
@@ -68,6 +70,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
             joinCall.setOnClickListener {
                 joinCallFunc()
+            }
+            backBtn.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -85,17 +90,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun tokenBuilder() {
-        val tokenBuilder = RtcTokenBuilder2()
-        val timestamp = (System.currentTimeMillis() / 1000 + 60).toInt()
         if (AGORA_TOKEN == null) {
-            AGORA_TOKEN = tokenBuilder.buildTokenWithUid(
-                AGORA_APP_ID,
-                AGORA_APP_CERTIFICATE,AGORA_CHANNEL_NAME,
-                AGORA_UID,
-                RtcTokenBuilder2.Role.ROLE_PUBLISHER,
-                timestamp,timestamp,
-            )
-            println("agoraTOken: $AGORA_TOKEN")
+            AGORA_TOKEN = tokenBuilder(AGORA_UID)
         }
 
     }
