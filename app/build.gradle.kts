@@ -25,10 +25,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         signingConfig = signingConfigs.getByName("release")
-        ndk {
+        //ndk {
             //abiFilters.addAll(arrayOf("arm64-v8a","x86_64","x86","armeabi-v7a"))
-            abiFilters.addAll(arrayOf("arm64-v8a","x86_64"))
-        }
+        //    abiFilters.addAll(arrayOf("arm64-v8a","x86_64"))
+        //}
     }
 
     buildTypes {
@@ -55,6 +55,8 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+
 }
 
 dependencies {
@@ -67,13 +69,11 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation("io.agora.rtc:full-sdk:4.2.6")
+    //implementation("io.agora.rtc:full-sdk:4.2.6")
+    implementation("io.agora.rtc:full-rtc-basic:4.2.6")
 
     implementation("commons-codec:commons-codec:1.11")
 
 
-    //implementation ("com.github.agoraio-community:videouikit-android:final:<version>")
-    //implementation("com.github.AgoraIO-Community:VideoUIKit-Android:4.0.1")
-    //implementation("com.github.AgoraIO-Community.VideoUIKit-Android:final:4.0.1")
 
 }
