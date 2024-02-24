@@ -21,4 +21,10 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class io.agora.**{*;}
+# -dontwarn com.google.devtools.build.android.desugar.runtime.ThrowableExtension
 -dontwarn com.google.devtools.build.android.desugar.runtime.ThrowableExtension
+
+-keepattributes *Annotation*
+-keep class com.android.tools.** {
+  public protected private <methods>;
+}
