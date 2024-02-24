@@ -9,7 +9,9 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/vcVoiceHideBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,4 +40,14 @@
         android:text="Voice Hide"
         app:layout_constraintBottom_toTopOf="@+id/vcJoinCall"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/backV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,6 +29,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         setContentView(binding.root)
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
+                println("finish onbackpressed")
                 finish()
             }
 

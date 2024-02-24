@@ -58,7 +58,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
         AGORA_UID = intent.getIntExtra("userId",0)
 
 
-        AGORA_TOKEN = "007eJxTYJidwavV5vBwpelN5rJnL+MXP9//bDdH7JoCwzNrvp92V1yswGBulGRpZmKYlpKYmmySZGBhkZSabGSZlmJgmGqSlmxuWtV6I3UbELe1TfRlZGBkYAFiEJ8JTDKDSRYwycOQmJ5flJhakZhbkJPKwAAAolkwRw=="
+        AGORA_TOKEN = "007eJxTYBDekD8vJFZAtPZj3e/Sj6s+KAQ4+jUd3H7iXKHeu/Lf79wUGMyNkizNTAzTUhJTk02SDCwsklKTjSzTUgwMU03Sks1NWY7dTG0IZGS4tGoaAyMUgvg8DInp+UWJqRWJuQU5qQwMABKOJao="
 
         //tokenBuilder()
 
@@ -124,11 +124,11 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
                 if (agoraEngine != null) {
                     when(videoHideStatus) {
                         0 -> {
-                            agoraEngine!!.muteLocalVideoStream(true)
+                            agoraEngine?.muteLocalVideoStream(true)
                             videoHideStatus = 1
                         }
                         1 -> {
-                            agoraEngine!!.muteLocalVideoStream(false)
+                            agoraEngine?.muteLocalVideoStream(false)
                             videoHideStatus = 0
                         }
                     }
@@ -195,10 +195,10 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             localSurface!!.visibility = VISIBLE
 
             //Video
-            agoraEngine!!.startPreview()
+            agoraEngine?.startPreview()
             //Video
 
-            agoraEngine!!.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
+            agoraEngine?.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
         }
 
     }
@@ -207,7 +207,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
         if (!isJoin) {
             println("Join a channel first")
         } else {
-            agoraEngine!!.leaveChannel()
+            agoraEngine?.leaveChannel()
             println("Yout left the channel")
             if (remoteSurface != null) remoteSurface!!.visibility = GONE
             if (localSurface != null) localSurface!!.visibility = GONE
@@ -247,7 +247,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             config.mAppId = AGORA_APP_ID
             config.mEventHandler = mRtcHandler
             agoraEngine = RtcEngine.create(config)
-            agoraEngine!!.enableVideo()
+            agoraEngine?.enableVideo()
             println("setupRtcEngine Success:")
         } catch (e: Exception) {
             println("setupRtcEngine Error:")
@@ -258,8 +258,8 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        agoraEngine!!.stopPreview()
-        agoraEngine!!.leaveChannel()
+        agoraEngine?.stopPreview()
+        agoraEngine?.leaveChannel()
         Thread {
             RtcEngine.destroy()
             agoraEngine = null
@@ -273,7 +273,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
 
 
         //VideoCanvas.RENDER_MODE_FIT,
-        agoraEngine!!.setupRemoteVideo(VideoCanvas(remoteSurface, VideoCanvas.RENDER_MODE_FIT, uid))
+        agoraEngine?.setupRemoteVideo(VideoCanvas(remoteSurface, VideoCanvas.RENDER_MODE_FIT, uid))
 
     }
 
@@ -282,7 +282,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
         localSurface!!.setZOrderMediaOverlay(true)
         b.localUser.addView(localSurface)
 
-        agoraEngine!!.setupLocalVideo(
+        agoraEngine?.setupLocalVideo(
             VideoCanvas(
                 localSurface,
                 VideoCanvas.RENDER_MODE_FIT,

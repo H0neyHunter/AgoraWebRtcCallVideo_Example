@@ -47,7 +47,7 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
 
         AGORA_UID = intent.getIntExtra("userId",0)
 
-        AGORA_TOKEN = "007eJxTYJidwavV5vBwpelN5rJnL+MXP9//bDdH7JoCwzNrvp92V1yswGBulGRpZmKYlpKYmmySZGBhkZSabGSZlmJgmGqSlmxuWtV6I3UbELe1TfRlZGBkYAFiEJ8JTDKDSRYwycOQmJ5flJhakZhbkJPKwAAAolkwRw=="
+        AGORA_TOKEN = "007eJxTYBDekD8vJFZAtPZj3e/Sj6s+KAQ4+jUd3H7iXKHeu/Lf79wUGMyNkizNTAzTUhJTk02SDCwsklKTjSzTUgwMU03Sks1NWY7dTG0IZGS4tGoaAyMUgvg8DInp+UWJqRWJuQU5qQwMABKOJao="
 
 
         b.apply {
@@ -56,6 +56,9 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
             }
             vcLeaveCall.setOnClickListener {
                 leaveCallFunc()
+            }
+            backV.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
             }
 
             voiceVideoHideOpen()
@@ -112,7 +115,7 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
             option.channelProfile = Constants.CHANNEL_PROFILE_COMMUNICATION
             option.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
 
-            agoraEngine!!.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
+            agoraEngine?.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
         }
 
     }
@@ -120,7 +123,7 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
         if (!isJoin) {
             println("Join a channel first")
         } else {
-            agoraEngine!!.leaveChannel()
+            agoraEngine?.leaveChannel()
             isJoin = false
         }
 
@@ -129,6 +132,7 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
         override fun onUserJoined(uid: Int, elapsed: Int) {
             super.onUserJoined(uid, elapsed)
             println("Remote User Joined $uid")
+
         }
 
         override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
@@ -153,27 +157,22 @@ class VoiceCallAgoraActivity : BaseActivity<ActivityVoiceCallAgoraBinding>() {
             config.mAppId = AGORA_APP_ID
             config.mEventHandler = mRtcHandler
             agoraEngine = RtcEngine.create(config)
-            agoraEngine!!.enableAudio()
+            agoraEngine?.enableAudio()
             println("setupRtcEngine Success:")
         } catch (e: Exception) {
-            println("setupRtcEngine Error:")
+            println("setupRtcEngine Error: ${e.localizedMessage}")
         }
 
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        try {
-            agoraEngine!!.stopAudioRecording()
-        }finally {
-            agoraEngine!!.leaveChannel()
-            Thread {
-                RtcEngine.destroy()
-                agoraEngine = null
-            }.start()
-        }
-
-
+        agoraEngine?.stopAudioRecording()
+        agoraEngine?.leaveChannel()
+        Thread {
+            RtcEngine.destroy()
+            agoraEngine = null
+        }.start()
     }
 
 
