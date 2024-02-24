@@ -48,7 +48,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
         ) != PackageManager.PERMISSION_GRANTED)
     }
 
-
+    private var firstOpen = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = initializeBinding()
@@ -73,6 +73,33 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             }
             backBtn.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
+            }
+            localUser.setOnClickListener {
+                try {
+                    if (firstOpen == 0) {
+                        if (remoteSurface != null && localSurface != null) {
+                            remoteUser.removeAllViews()
+                            localUser.removeAllViews()
+                            remoteSurface?.setZOrderMediaOverlay(true)
+                            localSurface?.setZOrderMediaOverlay(false)
+                            remoteUser.addView(localSurface)
+                            localUser.addView(remoteSurface)
+                            firstOpen = 101
+                        }
+
+                    }else {
+                        remoteUser.removeAllViews()
+                        localUser.removeAllViews()
+                        remoteSurface?.setZOrderMediaOverlay(false)
+                        localSurface?.setZOrderMediaOverlay(true)
+                        remoteUser.addView(remoteSurface)
+                        localUser.addView(localSurface)
+                        firstOpen = 0
+                    }
+                }catch (e:Exception) {
+                    println("0localuser ${e.localizedMessage}")
+                }
+
             }
         }
 
@@ -176,8 +203,9 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
 
     private fun setupRemoteVideo(uid: Int) {
         remoteSurface = SurfaceView(baseContext)
-        remoteSurface!!.setZOrderMediaOverlay(true)
+        remoteSurface!!.setZOrderMediaOverlay(false)
         b.remoteUser.addView(remoteSurface)
+
 
         //VideoCanvas.RENDER_MODE_FIT,
         agoraEngine!!.setupRemoteVideo(VideoCanvas(remoteSurface, VideoCanvas.RENDER_MODE_FIT, uid))
