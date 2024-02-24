@@ -4,6 +4,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "123456789"
+            storePassword = "123456789"
+            storeFile =
+                file("/Users/h0neyhunter-m2/Desktop/U-SYSTEM_App/1_Github_Public_Test/AgoraWebRtcCallVideoExample/1_FilesSDKLinkInformation/keystore.jks")
+        }
+    }
     namespace = "com.usyssoft.myapplication"
     compileSdk = 34
 
@@ -15,15 +24,25 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig = signingConfigs.getByName("release")
+        ndk {
+            //abiFilters.addAll(arrayOf("arm64-v8a","x86_64","x86","armeabi-v7a"))
+            abiFilters.addAll(arrayOf("arm64-v8a","x86_64"))
+        }
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = true
+
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            testProguardFiles ("test-proguard-rules.pro")
         }
     }
     compileOptions {
@@ -50,12 +69,11 @@ dependencies {
 
     implementation("io.agora.rtc:full-sdk:4.2.6")
 
-
     implementation("commons-codec:commons-codec:1.11")
 
 
     //implementation ("com.github.agoraio-community:videouikit-android:final:<version>")
     //implementation("com.github.AgoraIO-Community:VideoUIKit-Android:4.0.1")
-    implementation("com.github.AgoraIO-Community.VideoUIKit-Android:final:4.0.1")
+    //implementation("com.github.AgoraIO-Community.VideoUIKit-Android:final:4.0.1")
 
 }

@@ -31,9 +31,6 @@
             android:name=".Activity.CustomAgoraActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.UikitAgoraActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activity.SelectActivity"
             android:exported="true">
             <intent-filter>

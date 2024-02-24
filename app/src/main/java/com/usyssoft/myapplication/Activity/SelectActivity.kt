@@ -31,9 +31,6 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>() {
                 }
 
             }
-            uikitAgoraA.setOnClickListener {
-                startActivity(Intent(this@SelectActivity,UikitAgoraActivity::class.java))
-            }
             voiceCallBtn.setOnClickListener {
                 if (editTextPhone.text.toString().toIntOrNull() != null) {
                     val intent = Intent(this@SelectActivity,VoiceCallAgoraActivity::class.java)
