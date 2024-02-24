@@ -1,7 +1,6 @@
 package com.usyssoft.myapplication.Activity
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.SurfaceView
@@ -10,7 +9,6 @@ import android.view.View.VISIBLE
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.usyssoft.myapplication.BaseActivity
-import com.usyssoft.myapplication.Utils.media.RtcTokenBuilder2
 import com.usyssoft.myapplication.databinding.ActivityCustomagoraBinding
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
@@ -48,7 +46,9 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
         ) != PackageManager.PERMISSION_GRANTED)
     }
 
-    private var firstOpen = 0
+    private var videoTransActionChangeFrameStatus = 0
+    private var videoHideStatus = 0
+    private var voiceHideStatus = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = initializeBinding()
@@ -76,7 +76,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             }
             localUser.setOnClickListener {
                 try {
-                    if (firstOpen == 0) {
+                    if (videoTransActionChangeFrameStatus == 0) {
                         if (remoteSurface != null && localSurface != null) {
                             remoteUser.removeAllViews()
                             localUser.removeAllViews()
@@ -84,7 +84,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
                             localSurface?.setZOrderMediaOverlay(false)
                             remoteUser.addView(localSurface)
                             localUser.addView(remoteSurface)
-                            firstOpen = 101
+                            videoTransActionChangeFrameStatus = 101
                         }
 
                     }else {
@@ -94,10 +94,45 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
                         localSurface?.setZOrderMediaOverlay(true)
                         remoteUser.addView(remoteSurface)
                         localUser.addView(localSurface)
-                        firstOpen = 0
+                        videoTransActionChangeFrameStatus = 0
                     }
                 }catch (e:Exception) {
                     println("0localuser ${e.localizedMessage}")
+                }
+
+            }
+
+
+
+            voiceVideoHideOpen()
+            voiceHide.setOnClickListener {
+                if (agoraEngine != null) {
+                    when(voiceHideStatus) {
+                        0 -> {
+                            agoraEngine?.muteLocalAudioStream(true)
+                            voiceHideStatus = 1
+                        }
+                        1 -> {
+                            agoraEngine?.muteLocalAudioStream(false)
+                            voiceHideStatus = 0
+                        }
+                    }
+                    voiceVideoHideOpen()
+                }
+            }
+            videoHide.setOnClickListener {
+                if (agoraEngine != null) {
+                    when(videoHideStatus) {
+                        0 -> {
+                            agoraEngine!!.muteLocalVideoStream(true)
+                            videoHideStatus = 1
+                        }
+                        1 -> {
+                            agoraEngine!!.muteLocalVideoStream(false)
+                            videoHideStatus = 0
+                        }
+                    }
+                    voiceVideoHideOpen()
                 }
 
             }
@@ -105,7 +140,7 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
 
         setupRTCEngine()
 
-        permissionResultLiveData.observe(this) { isPermissionGranted ->
+        permissionResultLiveData.observe(this@CustomAgoraActivity) { isPermissionGranted ->
             if (isPermissionGranted) {
                 joinCallFunc()
             } else {
@@ -113,6 +148,32 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             }
         }
 
+        /*
+        agoraEngine?.muteLocalVideoStream(false)
+        agoraEngine?.muteLocalAudioStream(false)*/
+
+
+    }
+
+    private fun voiceVideoHideOpen() {
+        b.apply {
+            when(voiceHideStatus) {
+                0 -> {
+                    voiceHide.text = "VoiceHide"
+                }
+                1 -> {
+                    voiceHide.text = "VoiceOpen"
+                }
+            }
+            when(videoHideStatus) {
+                0 -> {
+                    videoHide.text = "VideoHide"
+                }
+                1 -> {
+                    videoHide.text = "VideoOpen"
+                }
+            }
+        }
 
     }
 
@@ -132,7 +193,11 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
             option.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
             setupLocalVideo()
             localSurface!!.visibility = VISIBLE
+
+            //Video
             agoraEngine!!.startPreview()
+            //Video
+
             agoraEngine!!.joinChannel(AGORA_TOKEN, AGORA_CHANNEL_NAME, AGORA_UID, option)
         }
 

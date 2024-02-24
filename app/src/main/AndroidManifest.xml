@@ -25,6 +25,9 @@
         android:theme="@style/Theme.AgoraWebRtcCallVideo_Example"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.VoiceCallAgoraActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.CustomAgoraActivity"
             android:exported="false" />
         <activity

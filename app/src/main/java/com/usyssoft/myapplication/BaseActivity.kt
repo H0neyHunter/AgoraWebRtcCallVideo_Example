@@ -17,6 +17,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         const val AGORA_CHANNEL_NAME = "agoraexample"
         const val AGORA_APP_CERTIFICATE = ""
         const val PERMISSION_CODE_VIDEO_CALL = 987
+        const val PERMISSION_CODE_VOICE_CALL = 988
     }
 
     val permissionResultLiveData = MutableLiveData<Boolean>()

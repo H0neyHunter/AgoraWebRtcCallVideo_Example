@@ -34,6 +34,15 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>() {
             uikitAgoraA.setOnClickListener {
                 startActivity(Intent(this@SelectActivity,UikitAgoraActivity::class.java))
             }
+            voiceCallBtn.setOnClickListener {
+                if (editTextPhone.text.toString().toIntOrNull() != null) {
+                    val intent = Intent(this@SelectActivity,VoiceCallAgoraActivity::class.java)
+                    intent.putExtra("userId",editTextPhone.text.toString().toInt())
+                    startActivity(intent)
+                }else {
+                    Toast.makeText(this@SelectActivity, "userId sadece Int olmalı", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

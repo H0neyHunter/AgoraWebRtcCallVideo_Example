@@ -20,7 +20,7 @@
 
     <FrameLayout
         android:id="@+id/local_user"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="200dp"
         android:layout_marginBottom="52dp"
         android:background="#7E7A7A"
@@ -56,5 +56,21 @@
         android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/remote_user"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/voiceHide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VoiceHide"
+        app:layout_constraintBottom_toTopOf="@+id/videoHide"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/videoHide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VideoHide"
+        app:layout_constraintBottom_toTopOf="@+id/joinCall"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
