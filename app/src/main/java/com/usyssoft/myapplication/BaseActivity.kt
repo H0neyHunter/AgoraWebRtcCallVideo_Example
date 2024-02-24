@@ -61,6 +61,13 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
                     permissionResultLiveData.value = false
                 }
             }
+            PERMISSION_CODE_VOICE_CALL -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionResultLiveData.value = true
+                } else {
+                    permissionResultLiveData.value = false
+                }
+            }
         }
     }
 }
