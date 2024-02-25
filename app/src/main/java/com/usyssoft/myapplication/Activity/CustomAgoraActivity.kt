@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.SurfaceView
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.usyssoft.myapplication.BaseActivity
@@ -49,16 +50,23 @@ class CustomAgoraActivity : BaseActivity<ActivityCustomagoraBinding>() {
     private var videoTransActionChangeFrameStatus = 0
     private var videoHideStatus = 0
     private var voiceHideStatus = 0
+
+    override fun onPause() {
+        super.onPause()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = initializeBinding()
         //b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         AGORA_UID = intent.getIntExtra("userId",0)
 
 
-        AGORA_TOKEN = "007eJxTYBDekD8vJFZAtPZj3e/Sj6s+KAQ4+jUd3H7iXKHeu/Lf79wUGMyNkizNTAzTUhJTk02SDCwsklKTjSzTUgwMU03Sks1NWY7dTG0IZGS4tGoaAyMUgvg8DInp+UWJqRWJuQU5qQwMABKOJao="
+        AGORA_TOKEN = "007eJxTYHAUV3TdIMdSd0ZQ7Ypq4txwd9v1t61jimyjl/ZoMZlvVFZgMDdKsjQzMUxLSUxNNkkysLBISk02skxLMTBMNUlLNjc9IHc7tSGQkeFkXBMjIwMEgvg8DInp+UWJqRWJuQU5qQwMAAjoH38="
 
         //tokenBuilder()
 
